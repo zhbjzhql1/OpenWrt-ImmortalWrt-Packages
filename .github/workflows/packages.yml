@@ -39,10 +39,11 @@ jobs:
         with:
           commit_message: "Update packages: ${{ steps.update.outputs.message }}"
           branch: main
-          tagging_message: "Auto-Update at ${{ steps.update.outputs.message }}"
+          # 关键参数：禁用标签创建
+          create_tag: false  # 默认是 true
           commit_user_name: "GitHub Actions Bot"
           commit_user_email: "actions@github.com"
-          token: ${{ secrets.GH_TOKEN }}  # 使用高权限PAT
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.0
