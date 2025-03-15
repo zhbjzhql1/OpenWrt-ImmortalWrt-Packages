@@ -37,13 +37,8 @@ jobs:
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          # 关键修复点：配置Git身份信息并指定分支
-          commit_message: "Update packages: ${{ steps.update.outputs.message }}"
-          branch: main  # 明确指定分支
-          tagging_message: "Auto-Update at ${{ steps.update.outputs.message }}"  # 消除标签警告
-          commit_user_name: "GitHub Actions Bot"  # 强制设置用户身份
-          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
-          token: ${{ secrets.GITHUB_TOKEN }}  # 显式声明使用默认token
+          commit_message: ${{ steps.update.outputs.message }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.0
