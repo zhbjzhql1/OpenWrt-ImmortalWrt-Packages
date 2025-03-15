@@ -47,7 +47,7 @@ jobs:
           git config --global user.name "GitHub Actions"
 
           status=$(git status -sb)
-          if [ "$status" == "## main...origin/main" ];then
+          if [ "$status" == "## main" ];then
               echo "nothing to commit, working tree clean"
           else
           Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
