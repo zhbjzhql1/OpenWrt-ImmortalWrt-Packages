@@ -4,7 +4,7 @@ on:
     branches: [ main ]
   workflow_dispatch:
   schedule:
-    - cron: '0 */12 * * *'
+  - cron: 0 */12 * * *
 
 env:
   TZ: Asia/Shanghai
@@ -13,34 +13,27 @@ jobs:
   Update_OpenWrt_Packages:
     runs-on: ubuntu-latest
 
-    permissions:  # 关键权限声明
-      contents: write
-      actions: write
-
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
-        with:
-          # 深度克隆确保分支关联
-          fetch-depth: 0  
-          ref: main
+        uses: actions/checkout@main
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Setup Python 3.9.x
+        uses: actions/setup-python@main
         with:
           python-version: '3.9.x'
 
       - name: Install Dependencies
         run: |
+          sudo timedatectl set-timezone "$TZ"
           python -m pip install --upgrade pip
           pip install -U GitPython
 
-      - name: Update Packages
+      - name: Update OpenWrt Packages
         id: update
         run: |
           python packages.py
           rm -rf __pycache__
-          echo "message=$(date +'%Y-%m-%d_%H%M%S')" >> $GITHUB_OUTPUT
+          echo "message=$(date)" >> $GITHUB_OUTPUT
 
       - name: Commit
         run: |
@@ -60,10 +53,9 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           branch: main      
-
+          
       - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2.0.0
+        uses: Mattraks/delete-workflow-runs@main
         with:
           retain_days: 0
           keep_minimum_runs: 2
-          token: ${{ secrets.GH_TOKEN }}
