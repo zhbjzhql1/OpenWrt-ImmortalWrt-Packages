@@ -37,7 +37,11 @@ jobs:
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: ${{ steps.update.outputs.message }}
+          commit_message: "Update packages: ${{ steps.update.outputs.message }}"
+          branch: main
+          tagging_message: "Auto-Update at ${{ steps.update.outputs.message }}"
+          commit_user_name: "GitHub Actions Bot"
+          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
           token: ${{ secrets.GH_TOKEN }}
 
       - name: Delete workflow runs
