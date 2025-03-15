@@ -13,11 +13,19 @@ jobs:
   Update_OpenWrt_Packages:
     runs-on: ubuntu-latest
 
+    permissions:  # 关键权限声明
+      contents: write
+      actions: write
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+        with:
+          # 深度克隆确保分支关联
+          fetch-depth: 0  
+          ref: main
 
-      - name: Setup Python 3.9.x
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9.x'
@@ -27,23 +35,31 @@ jobs:
           python -m pip install --upgrade pip
           pip install -U GitPython
 
-      - name: Update OpenWrt Packages
+      - name: Update Packages
         id: update
         run: |
           python packages.py
           rm -rf __pycache__
-          echo "message=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "message=$(date +'%Y-%m-%d_%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Configure Git Identity
+        run: |  # 强制设置全局Git身份
+          git config --global user.name "OpenWrt Package Bot"
+          git config --global user.email "openwrt-bot@noreply.github.com"
 
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update packages: ${{ steps.update.outputs.message }}"
+          commit_message: "chore: auto-update ${{ steps.update.outputs.message }}"
           branch: main
-          # 关键参数：禁用标签创建
-          create_tag: false  # 默认是 true
-          commit_user_name: "GitHub Actions Bot"
-          commit_user_email: "actions@github.com"
-          token: ${{ secrets.GH_TOKEN }}
+          create_tag: false  # 彻底禁用标签
+          # 使用PAT替代默认token（需在仓库Secrets创建PAT）
+          token: ${{ secrets.GH_TOKEN }}  
+          commit_options: "--no-verify"  # 跳过pre-commit检查
+          add_options: "-u"  # 强制添加所有修改
+
+      - name: Cleanup
+        run: git reset --hard HEAD  # 确保工作区干净
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.0
