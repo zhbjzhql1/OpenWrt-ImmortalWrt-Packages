@@ -36,10 +36,9 @@ jobs:
           echo "message=$(date)" >> $GITHUB_OUTPUT
 
       - name: Commit Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+          token: ${{ secrets.GH_TOKEN }}
           commit_message: ${{ steps.update.outputs.message }}
           
       - name: Delete workflow runs
