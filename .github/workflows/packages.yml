@@ -42,24 +42,24 @@ jobs:
           rm -rf __pycache__
           echo "message=$(date +'%Y-%m-%d_%H%M%S')" >> $GITHUB_OUTPUT
 
-      - name: Configure Git Identity
-        run: |  # 强制设置全局Git身份
-          git config --global user.name "OpenWrt Package Bot"
-          git config --global user.email "openwrt-bot@noreply.github.com"
+      - name: Commit
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
 
-      - name: Commit Changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+          status=$(git status -sb)
+          if [ "$status" == "## main...origin/main" ];then
+              echo "nothing to commit, working tree clean"
+          else
+          Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
+          git add .
+          git commit -m "${Emoji[$[$RANDOM % ${#Emoji[@]}]]} Sync $(TZ='Asia/Shanghai' date +%Y-%m-%d" "%H:%M:%S)${Emoji[$[$RANDOM % ${#Emoji[@]}]]}"
+          fi
+        
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          commit_message: "chore: auto-update ${{ steps.update.outputs.message }}"
-          branch: main
-          create_tag: false  # 彻底禁用标签
-          # 使用PAT替代默认token（需在仓库Secrets创建PAT）
-          token: ${{ secrets.GH_TOKEN }}  
-          commit_options: "--no-verify"  # 跳过pre-commit检查
-          add_options: "-u"  # 强制添加所有修改
-
-      - name: Cleanup
-        run: git reset --hard HEAD  # 确保工作区干净
+          branch: main      
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.0
