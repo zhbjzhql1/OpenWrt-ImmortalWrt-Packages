@@ -4,7 +4,7 @@ on:
     branches: [ main ]
   workflow_dispatch:
   schedule:
-  - cron: 0 */12 * * *
+    - cron: '0 */12 * * *'
 
 env:
   TZ: Asia/Shanghai
@@ -15,16 +15,15 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup Python 3.9.x
-        uses: actions/setup-python@main
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9.x'
 
       - name: Install Dependencies
         run: |
-          sudo timedatectl set-timezone "$TZ"
           python -m pip install --upgrade pip
           pip install -U GitPython
 
@@ -33,16 +32,16 @@ jobs:
         run: |
           python packages.py
           rm -rf __pycache__
-          echo "message=$(date)" >> $GITHUB_OUTPUT
+          echo "message=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
 
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          commit_message: ${{ steps.update.outputs.message }}
-          
+          commit_message: "Update packages: ${{ steps.update.outputs.message }}"
+
       - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@main
+        uses: Mattraks/delete-workflow-runs@v2.0.0
         with:
           retain_days: 0
           keep_minimum_runs: 2
+          token: ${{ secrets.GH_TOKEN }}
