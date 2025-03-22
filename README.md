@@ -7,7 +7,7 @@
 |[luci-app-adguardhome](https://github.com/rufengsuixing/luci-app-adguardhome)|rufengsuixing|adguardhome|single|20200113|
 |[luci-app-alist](https://github.com/sbwml/luci-app-alist)|sbwml|alist|multi|20250317|
 |[luci-app-homeproxy](https://github.com/muink/luci-app-homeproxy)|muink|homeproxy 代理|single|20240830|
-|[luci-app-lucky](https://github.com/sirpdboy/luci-app-lucky)|Siriling|Lucky 大吉|single|20250223|
+|[luci-app-lucky](https://github.com/sirpdboy/luci-app-lucky)|Siriling|Lucky 大吉|single|20250321|
 |[luci-app-mosdns](https://github.com/sbwml/luci-app-mosdns)|sbwml|mosdns|multi|20250315|
 |[luci-app-nikki](https://github.com/nikkinikki-org/OpenWrt-nikki)|nikkinikki-org|nikki 代理|single|20250317|
 |[luci-app-partexp](https://github.com/sirpdboy/luci-app-partexp)|sirpdboy|分区管理|single|20250321|
